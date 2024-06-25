@@ -1,20 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <title>Chat com Ably</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat-ON</title>
   <style>
-    ul { list-style-type: none; margin: 0; padding: 0; }
-    li { padding: 8px; margin-bottom: 10px; background: #f2f2f2; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    #username, #usercity {
+      font-weight: bold;
+      color: #4CAF50;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      max-height: 300px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 20px 25px;
+      background-color: #fff;
+    }
+
+    li {
+      padding: 8px;
+      margin-bottom: 10px;
+      background: #f2f2f2;
+      border-radius: 4px;
+      display: flex;
+      align-items: left;
+    }
+
+    form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .online-count {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    #input{
+      padding: 10px 20px;
+      margin: 10px;
+    }
+    
+    #messages{
+      margin: 10px;
+    }
+    
   </style>
 </head>
 <body>
-  <h2>Chat com Ably</h2>
-  <div>Bem-vindo, <span id="username"></span> de <span id="usercity"></span>!</div>
-  <ul id="messages"></ul>
-  <form id="form">
-    <input id="input" autocomplete="off" /><button>Send</button>
-  </form>
-  <div>Usuários online: <span id="onlineCount">0</span></div>
+  <div class="container">
+    <h2>Chat-ON</h2>
+    <div>Bem-vindo, <span id="username"></span> de <span id="usercity"></span>!</div>
+    <ul id="messages"></ul>
+    <form id="form">
+      <input id="input" autocomplete="off" placeholder="Digite sua mensagem..." />
+      <button type="submit">Enviar</button>
+    </form>
+    <div class="online-count">Usuários online: <span id="onlineCount">0</span></div>
+  </div>
+
   <!-- Ably SDK -->
   <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
   <script>
@@ -22,12 +124,22 @@
     const username = localStorage.getItem('username');
     const usercity = localStorage.getItem('usercity');
 
-    // Exibir nome e cidade na página
-    document.getElementById('username').textContent = username;
-    document.getElementById('usercity').textContent = usercity;
+    // Verificar se há nome de usuário no localStorage
+    if (!username) {
+      // Redirecionar de volta ao index se não houver nome de usuário
+      window.location.href = 'index.html';
+    }
 
-    // Conectar ao Ably com a chave de API
-    const ably = new Ably.Realtime('ynrGug.SXDJOg:aoStJmyUcLlpwgEzYsJt8CFDsTBCq-yMjqNn6_DkgvM');
+    // Exibir nome e cidade na página
+    document.getElementById('username').textContent = username || 'Anônimo';
+    document.getElementById('usercity').textContent = usercity || 'Desconhecida';
+
+    // Conectar ao Ably com a chave de API e o clientId (token aleatório)
+    const clientId = localStorage.getItem('clientId');
+    const ably = new Ably.Realtime({
+      key: 'ynrGug.SXDJOg:aoStJmyUcLlpwgEzYsJt8CFDsTBCq-yMjqNn6_DkgvM',
+      clientId: clientId || generateRandomToken(32)
+    });
     const channel = ably.channels.get('chat');
 
     // Função para atualizar a contagem de usuários online
@@ -41,8 +153,8 @@
       });
     }
 
-    // Entrar no canal de presença com o nome de usuário
-    channel.presence.enter({ clientId: username }, (err) => {
+    // Entrar no canal de presença com o clientId (token aleatório)
+    channel.presence.enter({ clientId: clientId }, (err) => {
       if (err) {
         console.error('Erro ao entrar no canal de presença:', err);
         return;
@@ -61,20 +173,34 @@
       const item = document.createElement('li');
       item.textContent = `${data.name}: ${data.message}`;
       document.getElementById('messages').appendChild(item);
+      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
     });
 
     // Enviar mensagens
     document.getElementById('form').addEventListener('submit', function(e) {
       e.preventDefault();
       const input = document.getElementById('input');
-      channel.publish('message', { name: username, message: input.value });
+      if (input.value.trim() === '') return; // Evitar mensagens vazias
+      channel.publish('message', { name: username || 'Anônimo', message: input.value.trim() });
       input.value = '';
     });
 
     // Sair do canal de presença ao fechar a janela
     window.addEventListener('beforeunload', () => {
-      channel.presence.leave({ clientId: username });
+      channel.presence.leave({ clientId: clientId });
     });
+
+    // Função para gerar token aleatório
+    function generateRandomToken(length) {
+      let charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let token = '';
+      let values = new Uint32Array(length);
+      window.crypto.getRandomValues(values);
+      for (let i = 0; i < length; i++) {
+        token += charset[values[i] % charset.length];
+      }
+      return token;
+    }
   </script>
 </body>
 </html>
