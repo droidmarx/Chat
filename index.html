@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introdução ao Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 300px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Chat-ON</h2>
+    <form id="introForm">
+      <label for="name"></label>
+      <input placeholder="Nome" type="text" id="name" required />
+      <label for="city">Carregando Geolocalização...</label>
+      <input placeholder="Cidade" type="text" id="city" disabled /><br><br>
+      <button type="submit" disabled>Iniciar Chat</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const cityInput = document.getElementById('city');
+      const form = document.getElementById('introForm');
+      const submitButton = form.querySelector('button[type="submit"]');
+      
+      // Verificar se o navegador suporta geolocalização
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          // Utilizar serviço de geocodificação reversa para obter a cidade
+          const geocodeUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt`;
+          
+          fetch(geocodeUrl)
+            .then(response => response.json())
+            .then(data => {
+              const city = data.locality;
+              cityInput.value = city;
+              cityInput.removeAttribute('disabled');
+              submitButton.removeAttribute('disabled');
+              form.querySelector('label[for="city"]').textContent = 'Cidade';
+            })
+            .catch(error => {
+              console.error('Erro ao obter a cidade:', error);
+              cityInput.placeholder = 'Erro ao carregar cidade. Preencha manualmente.';
+              cityInput.removeAttribute('disabled');
+              submitButton.removeAttribute('disabled');
+            });
+        }, error => {
+          console.error('Erro ao obter a localização:', error);
+          cityInput.placeholder = 'Erro ao carregar cidade. Preencha manualmente.';
+          cityInput.removeAttribute('disabled');
+          submitButton.removeAttribute('disabled');
+        });
+      } else {
+        console.error('Geolocalização não é suportada pelo navegador.');
+        cityInput.placeholder = 'Geolocalização não suportada. Preencha manualmente.';
+        cityInput.removeAttribute('disabled');
+        submitButton.removeAttribute('disabled');
+      }
+
+      // Ao enviar o formulário
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const city = document.getElementById('city').value;
+        // Armazenar os dados temporariamente no localStorage
+        localStorage.setItem('username', name);
+        localStorage.setItem('usercity', city);
+        // Redirecionar para a página principal do chat
+        window.location.href = 'chat.html';
+      });
+    });
+  </script>
+</body>
+</html>
