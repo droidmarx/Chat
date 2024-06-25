@@ -256,7 +256,7 @@
     // Função para exibir alerta de novo usuário
     function displayNewUserAlert(member) {
       const newUserAlert = document.getElementById('newUserAlert');
-      newUserAlert.innerHTML = `<div class="new-user">Novo usuário online: ${member.data.name} de ${member.data.city}</div>`;
+      newUserAlert.innerHTML = `<div class="new-user">${member.data.name} de ${member.data.city}</div>Entrou !`;
       setTimeout(() => {
         newUserAlert.innerHTML = '';
       }, 5000); // Remove o alerta após 5 segundos
