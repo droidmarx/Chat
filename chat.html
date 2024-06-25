@@ -23,6 +23,7 @@
       padding: 20px;
       width: 400px;
       text-align: center;
+      overflow: hidden;
     }
 
     h2 {
@@ -40,7 +41,7 @@
       list-style-type: none;
       margin: 0;
       max-height: 300px;
-      overflow-y: scroll;
+      overflow-y: auto;
       border: .5px solid #ccc;
       border-radius: 4px;
       padding: 30px 25px;
@@ -58,21 +59,23 @@
     }
 
     li {
+      max-width: 100%;
+      overflow: hidden;
       padding: 8px;
       margin-bottom: 10px;
       background: #f2f2f2;
       border-radius: 4px;
       display: flex;
-      align-items: left;
+      flex-direction: column;
+      align-items: flex-start;
+      word-wrap: break-word;
+      word-break: break-all;
     }
 
     .city {
-      margin-top: 0px;
       font-size: 12px;
       color: #999;
-      margin-right: 5px;
       padding: 2px;
-      overflow: hidden;
     }
 
     form {
@@ -140,9 +143,13 @@
     .message-info{
       font-size: 12px;
       color: #22AB45;
-      padding:2px;
-      overflow: hidden;
-      
+      align-items: left;
+    }
+    
+    .name{
+      color: #949E96;
+      font-weight: 900;
+      align-items: left;
     }
   </style>
 </head>
@@ -209,18 +216,49 @@
     channel.presence.subscribe('leave', updateOnlineCount);
     channel.presence.subscribe('update', updateOnlineCount);
 
-channel.subscribe('message', function(message) {
-  const data = message.data;
-  const item = document.createElement('li');
-  const messageTime = new Date(message.timestamp);
-  const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
+    channel.subscribe('message', function(message) {
+      const data = message.data;
+      const item = document.createElement('li');
+      const messageTime = new Date(message.timestamp);
+      const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
 
-  // Alterando a ordem para colocar as horas (timeString) no final
-  item.innerHTML = `<span class="message-info">${data.city}</span> ${data.name}: ${data.message} <span class="city">${timeString}</span>`;
+      // Alterando a ordem para colocar as horas (timeString) no final
+      item.innerHTML = `
+      <span class="message-info">
+      ${timeString}
+      </span> 
+      
+      <span class="city">
+      ${data.city}
+      </span>
+      
+      <span class="name">
+      ${data.name} : 
+      </span>
+    
+      ${wrapText(data.message, 32)}`;
 
-  document.getElementById('messages').appendChild(item);
-  document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
-});
+      document.getElementById('messages').appendChild(item);
+      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
+    });
+
+    // Função para dividir o texto em várias linhas com um comprimento máximo especificado
+    function wrapText(text, maxLineLength) {
+      const words = text.split(' ');
+      let line = '';
+      let result = '';
+
+      for (const word of words) {
+        if (line.length + word.length + 1 > maxLineLength) {
+          result += line + '<br>';
+          line = word;
+        } else {
+          line += (line ? ' ' : '') + word;
+        }
+      }
+
+      return result + line;
+    }
 
     // Enviar mensagens
     document.getElementById('form').addEventListener('submit', function(e) {
@@ -235,7 +273,7 @@ channel.subscribe('message', function(message) {
       input.value = '';
     });
 
-    // Sair do canal de presença ao fechar a janela
+// Sair do canal de presença ao fechar a janela
     window.addEventListener('beforeunload', () => {
       channel.presence.leave({ clientId: clientId });
     });
