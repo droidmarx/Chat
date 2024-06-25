@@ -66,12 +66,8 @@
       align-items: left;
     }
 
-    .message-info {
-      min-width: 80px;
-      max-width: 80px;
-      height: 32px;
-      border-right: dimgray 2px solid;
-      margin-top: -2px;
+    .city {
+      margin-top: 0px;
       font-size: 12px;
       color: #999;
       margin-right: 5px;
@@ -141,14 +137,9 @@
     #messages {
       margin: 10px;
     }
-    .city{
-      min-width: 80px;
-      max-width: 80px;
-      position: absolute;
-      margin-top: 12px;
+    .message-info{
       font-size: 12px;
       color: #22AB45;
-      margin-right: 6px;
       padding:2px;
       overflow: hidden;
       
@@ -218,16 +209,18 @@
     channel.presence.subscribe('leave', updateOnlineCount);
     channel.presence.subscribe('update', updateOnlineCount);
 
-    // Receber mensagens
-    channel.subscribe('message', function(message) {
-      const data = message.data;
-      const item = document.createElement('li');
-      const messageTime = new Date(message.timestamp);
-      const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
-      item.innerHTML = `<span class="message-info"> ${data.city}</span><span class="city">${timeString}</span> ${data.name}: ${data.message}`;
-      document.getElementById('messages').appendChild(item);
-      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
-    });
+channel.subscribe('message', function(message) {
+  const data = message.data;
+  const item = document.createElement('li');
+  const messageTime = new Date(message.timestamp);
+  const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
+
+  // Alterando a ordem para colocar as horas (timeString) no final
+  item.innerHTML = `<span class="message-info">${data.city}</span> ${data.name}: ${data.message} <span class="city">${timeString}</span>`;
+
+  document.getElementById('messages').appendChild(item);
+  document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
+});
 
     // Enviar mensagens
     document.getElementById('form').addEventListener('submit', function(e) {
