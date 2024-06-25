@@ -191,10 +191,11 @@
     document.getElementById('usercity').textContent = usercity || 'Desconhecida';
 
     // Conectar ao Ably com a chave de API e o clientId (token aleatório)
-    const clientId = localStorage.getItem('clientId');
+    const clientId = localStorage.getItem('clientId') || generateRandomToken(32);
+    localStorage.setItem('clientId', clientId); // Armazenar clientId no localStorage
     const ably = new Ably.Realtime({
       key: 'ynrGug.SXDJOg:aoStJmyUcLlpwgEzYsJt8CFDsTBCq-yMjqNn6_DkgvM',
-      clientId: clientId || generateRandomToken(32)
+      clientId: clientId
     });
     const channel = ably.channels.get('chat');
 
@@ -210,7 +211,7 @@
     }
 
     // Entrar no canal de presença com o clientId (token aleatório)
-    channel.presence.enter({ clientId: clientId }, (err) => {
+    channel.presence.enter({ name: username, city: usercity }, (err) => {
       if (err) {
         console.error('Erro ao entrar no canal de presença:', err);
         return;
@@ -221,7 +222,7 @@
     // Atualizar a contagem de usuários online quando alguém entra ou sai
     channel.presence.subscribe('enter', member => {
       updateOnlineCount();
-      displayNewUserAlert(member.clientId);
+      displayNewUserAlert(member);
     });
     channel.presence.subscribe('leave', updateOnlineCount);
     channel.presence.subscribe('update', updateOnlineCount);
@@ -253,9 +254,9 @@
     });
 
     // Função para exibir alerta de novo usuário
-    function displayNewUserAlert(clientId) {
+    function displayNewUserAlert(member) {
       const newUserAlert = document.getElementById('newUserAlert');
-      newUserAlert.innerHTML = `<div class="new-user">Novo usuário online: ${clientId}</div>`;
+      newUserAlert.innerHTML = `<div class="new-user">Novo usuário online: ${member.data.name} de ${member.data.city}</div>`;
       setTimeout(() => {
         newUserAlert.innerHTML = '';
       }, 5000); // Remove o alerta após 5 segundos
@@ -269,17 +270,17 @@
 
       for (const word of words) {
         if (line.length + word.length + 1 > maxLineLength) {
-          result += line + '<br>';
-          line = word;
-        } else {
-          line += (line ? ' ' : '') + word;
-        }
-      }
+  result += line + '<br>';
+  line = word;
+} else {
+  line += (line ? ' ' : '') + word;
+}
+}
 
-      return result + line;
-    }
+return result + line;
+}
 
-  // Enviar mensagens
+// Enviar mensagens
 document.getElementById('form').addEventListener('submit', function(e) {
   e.preventDefault();
   const input = document.getElementById('input');
@@ -294,7 +295,7 @@ document.getElementById('form').addEventListener('submit', function(e) {
 
 // Sair do canal de presença ao fechar a janela
 window.addEventListener('beforeunload', () => {
-  channel.presence.leave({ clientId: clientId });
+  channel.presence.leave({ name: username, city: usercity });
 });
 
 // Função para gerar token aleatório
@@ -319,6 +320,6 @@ function logoff() {
   localStorage.clear();
   window.location.href = 'index.html';
 }
-</script> 
+</script>
 </body> 
 </html>
