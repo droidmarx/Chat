@@ -67,10 +67,13 @@
     }
 
     .message-info {
-      margin-top: 2px;
+      height: 32px;
+      border-right: dimgray 2px solid;
+      margin-top: -2px;
       font-size: 12px;
       color: #999;
       margin-right: 5px;
+      padding: 2px;
     }
 
     form {
@@ -134,6 +137,15 @@
 
     #messages {
       margin: 10px;
+    }
+    .city{
+      position: absolute;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #22AB45;
+      margin-right: 6px;
+      padding:2px;
+      
     }
   </style>
 </head>
@@ -206,7 +218,7 @@
       const item = document.createElement('li');
       const messageTime = new Date(message.timestamp);
       const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
-      item.innerHTML = `<span class="message-info">${timeString}</span> ${data.name}: ${data.message}`;
+      item.innerHTML = `<span class="message-info"> ${data.city}</span><span class="city">${timeString}</span> ${data.name}: ${data.message}`;
       document.getElementById('messages').appendChild(item);
       document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
     });
@@ -216,7 +228,11 @@
       e.preventDefault();
       const input = document.getElementById('input');
       if (input.value.trim() === '') return; // Evitar mensagens vazias
-      channel.publish('message', { name: username || 'Anônimo', message: input.value.trim() });
+      channel.publish('message', {
+        name: username || 'Anônimo',
+        city: usercity || 'Desconhecida',
+        message: input.value.trim()
+      });
       input.value = '';
     });
 
