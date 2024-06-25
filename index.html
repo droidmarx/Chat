@@ -65,7 +65,7 @@
     <h2>Chat-ON</h2>
     <form id="introForm">
       <label for="name"></label>
-      <input placeholder="Nome" type="text" id="name" required />
+      <input placeholder="Nome" type="text" id="name" required maxlength="32" />
       <label for="city">Carregando Geolocalização...</label>
       <input placeholder="Cidade" type="text" id="city" disabled /><br><br>
       <button type="submit" disabled>Iniciar Chat</button>
@@ -77,6 +77,7 @@
       const cityInput = document.getElementById('city');
       const form = document.getElementById('introForm');
       const submitButton = form.querySelector('button[type="submit"]');
+      const nameInput = document.getElementById('name');
       
       // Verificar se o navegador suporta geolocalização
       if (navigator.geolocation) {
@@ -114,6 +115,13 @@
         cityInput.removeAttribute('disabled');
         submitButton.removeAttribute('disabled');
       }
+
+      // Validação de comprimento do nome de usuário
+      nameInput.addEventListener('input', function() {
+        if (nameInput.value.length > 20) {
+          nameInput.value = nameInput.value.substring(0, 20);
+        }
+      });
 
       // Ao enviar o formulário
       form.addEventListener('submit', function(e) {
