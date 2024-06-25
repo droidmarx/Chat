@@ -151,12 +151,19 @@
       font-weight: 900;
       align-items: left;
     }
+    
+    .new-user {
+      color: #4CAF50;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Chat-<span id="on">ON</span></h2>
     <div>Bem-vindo, <span id="username"></span> de <span id="usercity"></span>!</div>
+    <div id="newUserAlert"></div>
     <ul id="messages"></ul>
     <form id="form">
       <input id="input" autocomplete="off" placeholder="Digite sua mensagem..." />
@@ -212,7 +219,10 @@
     });
 
     // Atualizar a contagem de usuários online quando alguém entra ou sai
-    channel.presence.subscribe('enter', updateOnlineCount);
+    channel.presence.subscribe('enter', member => {
+      updateOnlineCount();
+      displayNewUserAlert(member.clientId);
+    });
     channel.presence.subscribe('leave', updateOnlineCount);
     channel.presence.subscribe('update', updateOnlineCount);
 
@@ -242,6 +252,15 @@
       document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
     });
 
+    // Função para exibir alerta de novo usuário
+    function displayNewUserAlert(clientId) {
+      const newUserAlert = document.getElementById('newUserAlert');
+      newUserAlert.innerHTML = `<div class="new-user">Novo usuário online: ${clientId}</div>`;
+      setTimeout(() => {
+        newUserAlert.innerHTML = '';
+      }, 5000); // Remove o alerta após 5 segundos
+    }
+
     // Função para dividir o texto em várias linhas com um comprimento máximo especificado
     function wrapText(text, maxLineLength) {
       const words = text.split(' ');
@@ -260,46 +279,46 @@
       return result + line;
     }
 
-    // Enviar mensagens
-    document.getElementById('form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const input = document.getElementById('input');
-      if (input.value.trim() === '') return; // Evitar mensagens vazias
-      channel.publish('message', {
-        name: username || 'Anônimo',
-        city: usercity || 'Desconhecida',
-        message: input.value.trim()
-      });
-      input.value = '';
-    });
+  // Enviar mensagens
+document.getElementById('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const input = document.getElementById('input');
+  if (input.value.trim() === '') return; // Evitar mensagens vazias
+  channel.publish('message', {
+    name: username || 'Anônimo',
+    city: usercity || 'Desconhecida',
+    message: input.value.trim()
+  });
+  input.value = '';
+});
 
 // Sair do canal de presença ao fechar a janela
-    window.addEventListener('beforeunload', () => {
-      channel.presence.leave({ clientId: clientId });
-    });
+window.addEventListener('beforeunload', () => {
+  channel.presence.leave({ clientId: clientId });
+});
 
-    // Função para gerar token aleatório
-    function generateRandomToken(length) {
-      let charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let token = '';
-      let values = new Uint32Array(length);
-      window.crypto.getRandomValues(values);
-      for (let i = 0; i < length; i++) {
-        token += charset[values[i] % charset.length];
-      }
-      return token;
-    }
+// Função para gerar token aleatório
+function generateRandomToken(length) {
+  let charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let token = '';
+  let values = new Uint32Array(length);
+  window.crypto.getRandomValues(values);
+  for (let i = 0; i < length; i++) {
+    token += charset[values[i] % charset.length];
+  }
+  return token;
+}
 
-    // Função para formatar o tempo (adicionar zero à esquerda se for menor que 10)
-    function formatTime(time) {
-      return time < 10 ? `0${time}` : time;
-    }
+// Função para formatar o tempo (adicionar zero à esquerda se for menor que 10)
+function formatTime(time) {
+  return time < 10 ? `0${time}` : time;
+}
 
-    // Função para logoff (limpar localStorage e redirecionar para a página inicial)
-    function logoff() {
-      localStorage.clear();
-      window.location.href = 'index.html';
-    }
-  </script>
-</body>
+// Função para logoff (limpar localStorage e redirecionar para a página inicial)
+function logoff() {
+  localStorage.clear();
+  window.location.href = 'index.html';
+}
+</script> 
+</body> 
 </html>
