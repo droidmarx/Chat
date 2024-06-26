@@ -330,8 +330,8 @@ if (!username) {
 }
 
 // Exibir nome e cidade na página
-document.getElementById('username').textContent = reverseString(username || 'Anônimo');
-document.getElementById('usercity').textContent = reverseString(usercity || 'Desconhecida');
+document.getElementById('username').textContent = username || 'Anônimo';
+document.getElementById('usercity').textContent = usercity || 'Desconhecida';
 
 // Conectar ao Ably com a chave de API e o clientId (token aleatório)
 const clientId = localStorage.getItem('clientId') || generateRandomToken(32);
@@ -380,14 +380,11 @@ channel.subscribe('message', function(message) {
   
   // Inverte o nome antes de exibir
   const reversedName = reverseString(data.name);
-  const reversedCity = reverseString(data.city);
-  const reversedMessage = reverseString(data.message);
-
 
   item.innerHTML = `
     <span class="message-info">${timeString}</span>
-    <span class="city">${reversedCity}</span>
-    <span class="name">${reversedName} :</span>
+    <span class="city">${data.city}</span>
+    <span class="name">${data.name} :</span>
     ${wrapText(reversedMessage, 32)}`;
 
   document.getElementById('messages').appendChild(item);
