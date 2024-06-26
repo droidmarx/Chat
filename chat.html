@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
+  
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat-ON</title>
+  <title>Chat-Papo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -170,18 +176,15 @@
     @keyframes blurColorAnimation {
       0% {
         filter: blur(10px);
-        background: darkgreen;
         opacity: 0;
         border-radius:30%;
       }
       50% {
         filter: blur(5px);
         opacity: 0.5;
-        background:green;
       }
       100% {
         filter: blur(0px);
-        background: currentColor;
         opacity: 1;
       }
     }
@@ -254,13 +257,26 @@
   border-radius: 4px;
 }
 
+   h2{
+  font-family: "Play", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: underline;
+    }
+    
+  span {
+   font-weight: bold;
+   color: #4CAF50;
+ }
+
     
   </style>
 </head>
 <body>
   
   <div class="container">
-    <h2>Chat-<span id="on">ON</span></h2>
+    <h2>Chat<span>-</span>Papo</h2>
+    
     <div>Bem-vindo, <span id="username"></span> de <span id="usercity"></span>!</div>
     <ul id="messages"></ul>
     <form id="form">
@@ -272,6 +288,10 @@
     <div id="newUserAlert"></div>
     
     <audio id="newUserSound" style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
+    
+  <audio id="messageSound" style="display: none" src="/audio/email_entact.mp3" controls></audio>
+
+    
     <button class="logoff-button" onclick="logoff()">Sair do Chat</button>
   </div>
   
@@ -291,88 +311,91 @@
   <!-- Ably SDK -->
   <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
   <script>
-    // Recuperar dados do localStorage
-    const username = localStorage.getItem('username');
-    const usercity = localStorage.getItem('usercity');
+// Recuperar dados do localStorage
+const username = localStorage.getItem('username');
+const usercity = localStorage.getItem('usercity');
 
-    // Verificar se há nome de usuário no localStorage
-    if (!username) {
-      // Redirecionar de volta ao index se não houver nome de usuário
-      window.location.href = 'index.html';
+// Verificar se há nome de usuário no localStorage
+if (!username) {
+  // Redirecionar de volta ao index se não houver nome de usuário
+  window.location.href = 'index.html';
+}
+
+// Exibir nome e cidade na página
+document.getElementById('username').textContent = username || 'Anônimo';
+document.getElementById('usercity').textContent = usercity || 'Desconhecida';
+
+// Conectar ao Ably com a chave de API e o clientId (token aleatório)
+const clientId = localStorage.getItem('clientId') || generateRandomToken(32);
+localStorage.setItem('clientId', clientId); // Armazenar clientId no localStorage
+const ably = new Ably.Realtime({
+  key: 'ynrGug.SXDJOg:aoStJmyUcLlpwgEzYsJt8CFDsTBCq-yMjqNn6_DkgvM',
+  clientId: clientId
+});
+const channel = ably.channels.get('chat');
+
+// Função para atualizar a contagem de usuários online
+function updateOnlineCount() {
+  channel.presence.get((err, members) => {
+    if (err) {
+      console.error('Erro ao obter a contagem de usuários online:', err);
+      return;
     }
+    document.getElementById('onlineCount').textContent = members.length;
+  });
+}
 
-    // Exibir nome e cidade na página
-    document.getElementById('username').textContent = username || 'Anônimo';
-    document.getElementById('usercity').textContent = usercity || 'Desconhecida';
-
-    // Conectar ao Ably com a chave de API e o clientId (token aleatório)
-    const clientId = localStorage.getItem('clientId') || generateRandomToken(32);
-    localStorage.setItem('clientId', clientId); // Armazenar clientId no localStorage
-    const ably = new Ably.Realtime({
-      key: 'ynrGug.SXDJOg:aoStJmyUcLlpwgEzYsJt8CFDsTBCq-yMjqNn6_DkgvM',
-      clientId: clientId
-    });
-    const channel = ably.channels.get('chat');
-
-    // Função para atualizar a contagem de usuários online
-    function updateOnlineCount() {
-      channel.presence.get((err, members) => {
-        if (err) {
-          console.error('Erro ao obter a contagem de usuários online:', err);
-          return;
-        }
-        document.getElementById('onlineCount').textContent = members.length;
-      });
+// Entrar no canal de presença com o clientId (token aleatório)
+function enterPresence() {
+  channel.presence.enter({ name: username, city: usercity }, (err) => {
+    if (err) {
+      console.error('Erro ao entrar no canal de presença:', err);
+      return;
     }
+    updateOnlineCount();
+  });
+}
 
-    // Entrar no canal de presença com o clientId (token aleatório)
-    function enterPresence() {
-      channel.presence.enter({ name: username, city: usercity }, (err) => {
-        if (err) {
-          console.error('Erro ao entrar no canal de presença:', err);
-          return;
-        }
-        updateOnlineCount();
-      });
-    }
+// Atualizar a contagem de usuários online quando alguém entra ou sai
+channel.presence.subscribe('enter', member => {
+  updateOnlineCount();
+  displayNewUserAlert(member);
+});
+channel.presence.subscribe('leave', updateOnlineCount);
+channel.presence.subscribe('update', updateOnlineCount);
 
-    // Atualizar a contagem de usuários online quando alguém entra ou sai
-    channel.presence.subscribe('enter', member => {
-      updateOnlineCount();
-      displayNewUserAlert(member);
-    });
-    channel.presence.subscribe('leave', updateOnlineCount);
-    channel.presence.subscribe('update', updateOnlineCount);
+channel.subscribe('message', function(message) {
+  const data = message.data;
+  const item = document.createElement('li');
+  const messageTime = new Date(message.timestamp);
+  const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
 
-    channel.subscribe('message', function(message) {
-      const data = message.data;
-      const item = document.createElement('li');
-      const messageTime = new Date(message.timestamp);
-      const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
+  item.innerHTML = `
+  <span class="message-info">
+  ${timeString}
+  </span> 
+  
+  <span class="city">
+  ${data.city}
+  </span>
+  
+  <span class="name">
+  ${data.name} : 
+  </span>
+  
+  ${wrapText(data.message, 32)}`;
 
-      item.innerHTML = `
-      <span class="message-info">
-      ${timeString}
-      </span> 
-      
-      <span class="city">
-      ${data.city}
-      </span>
-      
-      <span class="name">
-      ${data.name} : 
-      </span>
-    
-      ${wrapText(data.message, 32)}`;
+  document.getElementById('messages').appendChild(item);
+  document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
 
-      document.getElementById('messages').appendChild(item);
-      document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
-    });
+  // Tocar som de mensagem
+  document.getElementById('messageSound').play();
+});
 
-    // Variável para controlar o estado do chat
-    let chatStarted = false;
+// Variável para controlar o estado do chat
+let chatStarted = false;
 
-    // Função para exibir alerta de novo usuário
+// Função para exibir alerta de novo usuário
 function displayNewUserAlert(member) {
   const newUserAlert = document.getElementById('newUserAlert');
   const newUserSound = document.getElementById('newUserSound');
@@ -511,6 +534,7 @@ function closeOverlay() {
 // Adicionar eventos aos botões
 document.getElementById('showOnlineUsersButton').addEventListener('click', showOnlineUsers);
 document.getElementById('closeOverlayButton').addEventListener('click', closeOverlay);
+
 
 </script>
 </body>
