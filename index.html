@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat dev GuiMarx</title>
+  <title>Chat-Papo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -58,11 +63,24 @@
     button[type="submit"]:hover {
       background-color: #45a049;
     }
+    
+    h2{
+  font-family: "Play", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: underline;
+    }
+    
+    span{
+    font-weight: bold;
+    color: #4CAF50;
+    }
+    
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Chat-ON</h2>
+    <h2>Chat<span>-</span>Papo</h2>
     <form id="introForm">
       <label for="name"></label>
       <input placeholder="Nome" type="text" id="name" required maxlength="32" />
@@ -95,7 +113,7 @@
               cityInput.value = city;
               cityInput.removeAttribute('disabled');
               submitButton.removeAttribute('disabled');
-              form.querySelector('label[for="city"]').textContent = 'Cidade';
+              form.querySelector('label[for="city"]').textContent = '';
             })
             .catch(error => {
               console.error('Erro ao obter a cidade:', error);
