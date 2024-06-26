@@ -157,19 +157,26 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
+    
+    #newUserAlert{
+      translate: 2s ease-in;
+      height: 50px;
+    }
+    
   </style>
 </head>
 <body>
+  
   <div class="container">
     <h2>Chat-<span id="on">ON</span></h2>
     <div>Bem-vindo, <span id="username"></span> de <span id="usercity"></span>!</div>
-    <div id="newUserAlert"></div>
     <ul id="messages"></ul>
     <form id="form">
       <input id="input" autocomplete="off" placeholder="Digite sua mensagem..." />
-      <button type="submit">Enviar</button>
+      <button onclick="startChat()" type="submit">Enviar</button>
     </form>
-    <div class="online-count">Usuários online: <span id="onlineCount">0</span></div>
+    <div class="online-count">Usuários online: <span id="onlineCount">0</span><div id="newUserAlert"></div>
+    <audio id="newUserSound" style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
     <button class="logoff-button" onclick="logoff()">Sair do Chat</button>
   </div>
 
@@ -211,13 +218,15 @@
     }
 
     // Entrar no canal de presença com o clientId (token aleatório)
-    channel.presence.enter({ name: username, city: usercity }, (err) => {
-      if (err) {
-        console.error('Erro ao entrar no canal de presença:', err);
-        return;
-      }
-      updateOnlineCount();
-    });
+    function enterPresence() {
+      channel.presence.enter({ name: username, city: usercity }, (err) => {
+        if (err) {
+          console.error('Erro ao entrar no canal de presença:', err);
+          return;
+        }
+        updateOnlineCount();
+      });
+    }
 
     // Atualizar a contagem de usuários online quando alguém entra ou sai
     channel.presence.subscribe('enter', member => {
@@ -256,28 +265,31 @@
     // Função para exibir alerta de novo usuário
     function displayNewUserAlert(member) {
       const newUserAlert = document.getElementById('newUserAlert');
+      const newUserSound = document.getElementById('newUserSound');
+      
       newUserAlert.innerHTML = `<div class="new-user">${member.data.name} de ${member.data.city}</div>Entrou !`;
-      setTimeout(() => {
-        newUserAlert.innerHTML = '';
-      }, 5000); // Remove o alerta após 5 segundos
+newUserSound.play();
+setTimeout(() => {
+  newUserAlert.innerHTML = '';
+}, 5000); // Remove o alerta após 5 segundos
+}
+
+// Função para dividir o texto em várias linhas com um comprimento máximo especificado
+function wrapText(text, maxLineLength) {
+  const words = text.split(' ');
+  let line = '';
+  let result = '';
+
+  for (const word of words) {
+    if (line.length + word.length + 1 > maxLineLength) {
+      result += line + '<br>';
+      line = word;
+    } else {
+      line += (line ? ' ' : '') + word;
     }
+  }
 
-    // Função para dividir o texto em várias linhas com um comprimento máximo especificado
-    function wrapText(text, maxLineLength) {
-      const words = text.split(' ');
-      let line = '';
-      let result = '';
-
-      for (const word of words) {
-        if (line.length + word.length + 1 > maxLineLength) {
-  result += line + '<br>';
-  line = word;
-} else {
-  line += (line ? ' ' : '') + word;
-}
-}
-
-return result + line;
+  return result + line;
 }
 
 // Enviar mensagens
@@ -320,6 +332,11 @@ function logoff() {
   localStorage.clear();
   window.location.href = 'index.html';
 }
+
+// Função para iniciar o chat
+function startChat() {
+  enterPresence();
+}
 </script>
-</body> 
+</body>
 </html>
