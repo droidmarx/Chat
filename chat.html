@@ -186,6 +186,75 @@
       }
     }
     
+    /* Estilo do botão para mostrar usuários online */
+#showOnlineUsersButton {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+#showOnlineUsersButton:hover {
+  background-color: #45a049;
+}
+
+/* Estilo da sobreposição */
+#onlineUsersOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#overlayContent {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+  text-align: center;
+}
+
+#closeOverlayButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+#closeOverlayButton:hover {
+  background-color: #d32f2f;
+}
+
+#onlineUsersList {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+#onlineUsersList li {
+  background: #f2f2f2;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+    
   </style>
 </head>
 <body>
@@ -205,6 +274,19 @@
     <audio id="newUserSound" style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
     <button class="logoff-button" onclick="logoff()">Sair do Chat</button>
   </div>
+  
+  <!-- Botão para mostrar usuários online -->
+<button id="showOnlineUsersButton">Mostrar Usuários Online</button>
+
+<!-- Sobreposição de usuários online -->
+<div id="onlineUsersOverlay">
+  <div id="overlayContent">
+    <button id="closeOverlayButton">X</button>
+    <h3>Usuários Online</h3>
+    <ul id="onlineUsersList"></ul>
+  </div>
+</div>
+
 
   <!-- Ably SDK -->
   <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
@@ -396,6 +478,40 @@ function generateRandomToken(length) {
 function formatTime(time) {
   return time < 10 ? `0${time}` : time;
 }
+
+// Função para mostrar a sobreposição de usuários online
+function showOnlineUsers() {
+  const overlay = document.getElementById('onlineUsersOverlay');
+  const userList = document.getElementById('onlineUsersList');
+  userList.innerHTML = ''; // Limpar a lista
+
+  // Obter membros da presença e exibi-los na lista
+  channel.presence.get((err, members) => {
+    if (err) {
+      console.error('Erro ao obter usuários online:', err);
+      return;
+    }
+
+    members.forEach(member => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${member.data.name} de ${member.data.city}`;
+      userList.appendChild(listItem);
+    });
+
+    overlay.style.display = 'flex';
+  });
+}
+
+// Função para ocultar a sobreposição de usuários online
+function closeOverlay() {
+  const overlay = document.getElementById('onlineUsersOverlay');
+  overlay.style.display = 'none';
+}
+
+// Adicionar eventos aos botões
+document.getElementById('showOnlineUsersButton').addEventListener('click', showOnlineUsers);
+document.getElementById('closeOverlayButton').addEventListener('click', closeOverlay);
+
 </script>
 </body>
 </html>
