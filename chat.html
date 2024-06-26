@@ -380,6 +380,10 @@ channel.subscribe('message', function(message) {
   
   // Inverte o nome antes de exibir
   const reversedName = reverseString(data.name);
+  
+  const reversedCity = reverseString(data.city);
+  const reversedMessage = reverseString(data.message);
+
 
   item.innerHTML = `
     <span class="message-info">${timeString}</span>
