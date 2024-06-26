@@ -313,6 +313,11 @@
   <!-- Ably SDK -->
   <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
   <script>
+// Função para inverter uma string
+function reverseString(str) {
+  return str.split('').reverse().join('');
+}
+
 // Recuperar dados do localStorage
 const username = localStorage.getItem('username');
 const usercity = localStorage.getItem('usercity');
@@ -324,8 +329,8 @@ if (!username) {
 }
 
 // Exibir nome e cidade na página
-document.getElementById('username').textContent = username || 'Anônimo';
-document.getElementById('usercity').textContent = usercity || 'Desconhecida';
+document.getElementById('username').textContent = reverseString(username || 'Anônimo');
+document.getElementById('usercity').textContent = reverseString(usercity || 'Desconhecida');
 
 // Conectar ao Ably com a chave de API e o clientId (token aleatório)
 const clientId = localStorage.getItem('clientId') || generateRandomToken(32);
@@ -371,21 +376,18 @@ channel.subscribe('message', function(message) {
   const item = document.createElement('li');
   const messageTime = new Date(message.timestamp);
   const timeString = `${formatTime(messageTime.getHours())}:${formatTime(messageTime.getMinutes())}`;
+  
+  // Inverte o nome antes de exibir
+  const reversedName = reverseString(data.name);
+  const reversedCity = reverseString(data.city);
+  const reversedMessage = reverseString(data.message);
+
 
   item.innerHTML = `
-  <span class="message-info">
-  ${timeString}
-  </span> 
-  
-  <span class="city">
-  ${data.city}
-  </span>
-  
-  <span class="name">
-  ${data.name} : 
-  </span>
-  
-  ${wrapText(data.message, 32)}`;
+    <span class="message-info">${timeString}</span>
+    <span class="city">${reversedCity}</span>
+    <span class="name">${reversedName} :</span>
+    ${wrapText(reversedMessage, 32)}`;
 
   document.getElementById('messages').appendChild(item);
   document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
@@ -472,7 +474,7 @@ function logoff() {
   window.location.href = 'index.html';
 }
 
-// Adiciona evento de clique ao botão de envio
+// Adicionar evento de clique ao botão de envio
 document.getElementById('form').addEventListener('submit', function(e) {
   e.preventDefault();
   if (!chatStarted) {
