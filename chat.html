@@ -6,7 +6,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
 
-<link rel="shortcut icon" href="https://as1.ftcdn.net/v2/jpg/04/32/55/90/1000_F_432559096_x2iWIouTJn9EowBBzxqsuape7lVknaTa.jpg">
+<link rel="shortcut icon" href="https://sacbr.com.br/wp-content/uploads/2023/08/cropped-SACBR_icon.png">  
+
   
   
   <meta charset="UTF-8">
@@ -35,6 +36,10 @@
     }
 
     h2 {
+      font-family: "Play", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      text-decoration: underline;
       font-size: 24px;
       color: #333;
       margin-bottom: 20px;
@@ -54,43 +59,46 @@
       border-radius: 4px;
       padding: 30px 25px;
       background-color: #fff;
-      animation: pulse 1s infinite alternate;
     }
-
-    @keyframes pulse {
-      0% {
-        border-color: #ccc;
-      }
-      100% {
-        border-color: #4CAF50;
-      }
+    
+    #messages>li{
+      margin-right: 90px;
     }
 
     li {
       max-width: 100%;
       overflow: hidden;
-      padding: 8px;
-      margin-bottom: 10px;
+      padding: 10px 15px;
+      margin-bottom: 20px;
       background: #f2f2f2;
-      border-radius: 4px;
+      border-radius: 20px 20px 0px 20px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       word-wrap: break-word;
       word-break: break-all;
+      position: relative;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
-
-    .city {
-      font-size: 12px;
-      color: #999;
-      padding: 2px;
+    
+    li::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: -10px;
+      width: 0;
+      height: 0;
+      border: 10px solid transparent;
+      border-right-color: #f2f2f2;
     }
 
     form {
+      position: relative;
+      bottom: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 20px;
+      margin:0;
     }
 
     input[type="text"] {
@@ -141,24 +149,15 @@
     }
 
     #input {
-      padding: 10px 20px;
-      margin: 10px;
+      padding: 10px 15px;
+      margin: 0px;
+      outline: none;
+      border: .9px solid #B7D0BC;
     }
 
     #messages {
-      margin: 10px;
-    }
-
-    .message-info{
-      font-size: 12px;
-      color: #22AB45;
-      align-items: left;
-    }
-    
-    .name{
-      color: #949E96;
-      font-weight: 900;
-      align-items: left;
+      margin: 5px;
+      
     }
     
     .new-user {
@@ -167,7 +166,34 @@
       margin-bottom: 10px;
     }
     
+    .message {
+      align-items: right;
+      width: 100%;
+    }
+    
+    .name, .min, .city{
+      width: 40px;
+      height: 14px;
+      align-items: left;
+    }
+    
+    .name {
+     color: #3ABE54;
+     font-weight: 900;
+    }
+    
+    .min {
+     font-size: 12px;
+     color: #22AB45;
+    }
+
+    .city {
+     font-size: 12px;
+     color: #999;
+    }
+    
     #newUserAlert {
+      bottom: 50px;
       height: 50px;
     }
 
@@ -192,86 +218,84 @@
     }
     
     /* Estilo do botão para mostrar usuários online */
-#showOnlineUsersButton {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-}
-
-#showOnlineUsersButton:hover {
-  background-color: #45a049;
-}
-
-/* Estilo da sobreposição */
-#onlineUsersOverlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-#overlayContent {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  position: relative;
-  text-align: center;
-}
-
-#closeOverlayButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 5px 10px;
-}
-
-#closeOverlayButton:hover {
-  background-color: #d32f2f;
-}
-
-#onlineUsersList {
-  list-style-type: none;
-  padding: 0;
-  margin-top: 20px;
-}
-
-#onlineUsersList li {
-  background: #f2f2f2;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-}
-
-   h2{
-  font-family: "Play", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  text-decoration: underline;
+    #showOnlineUsersButton {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
     }
-    
-  span {
-   font-weight: bold;
-   color: #4CAF50;
- }
 
-    
+    #showOnlineUsersButton:hover {
+      background-color: #45a049;
+    }
+
+    /* Estilo da sobreposição */
+    #onlineUsersOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #overlayContent {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      position: relative;
+      text-align: center;
+    }
+
+    #closeOverlayButton {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 5px 10px;
+    }
+
+    #closeOverlayButton:hover {
+      background-color: #d32f2f;
+    }
+
+    #onlineUsersList {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    #onlineUsersList li {
+      background: #f2f2f2;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    h2 {
+      font-family: "Play", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      text-decoration: underline;
+    }
+
+    span {
+      font-weight: bold;
+      color: #4CAF50;
+    }
   </style>
 </head>
 <body>
@@ -287,6 +311,7 @@
     <div class="online-count">Usuários na sala: <span id="onlineCount">0</span>
 
     <ul id="messages"></ul>
+    
     <form id="form">
       <input id="input" autocomplete="off" placeholder="Digite sua mensagem..." />
       <button id="submitButton" type="submit">Entrar</button>
@@ -388,10 +413,10 @@ channel.subscribe('message', function(message) {
 
 
   item.innerHTML = `
-    <span class="message-info">${timeString}</span>
+    <span class="min">${timeString}</span>
     <span class="city">${data.city}</span>
     <span class="name">${data.name} :</span>
-    ${wrapText(reversedMessage, 32)}`;
+    <span class="message">${wrapText(reversedMessage, 32)}</span>`;
 
   document.getElementById('messages').appendChild(item);
   document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; // Scroll para o final
