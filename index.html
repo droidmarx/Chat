@@ -6,11 +6,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
   
-<link rel="shortcut icon" href="https://as1.ftcdn.net/v2/jpg/04/32/55/90/1000_F_432559096_x2iWIouTJn9EowBBzxqsuape7lVknaTa.jpg">  
+<link rel="shortcut icon" href="https://sacbr.com.br/wp-content/uploads/2023/08/cropped-SACBR_icon.png">  
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat-Papo</title>
+  <title>Chat-Opap</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -78,6 +78,24 @@
     color: #4CAF50;
     }
     
+    .blur {
+  filter: blur(10px);
+  transition: filter 0.6s ease;
+  animation-duration: 3s;
+  animation-name: slidein;
+}
+
+@keyframes slidein {
+  1% {
+    scale: 1;
+  }
+
+  100% {
+    scale: 50;
+  }
+}
+
+    
   </style>
 </head>
 <body>
@@ -91,6 +109,9 @@
       <button type="submit" disabled>Iniciar Chat</button>
     </form>
   </div>
+  
+    <audio id="wou" style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -152,7 +173,15 @@
         localStorage.setItem('username', name);
         localStorage.setItem('usercity', city);
         // Redirecionar para a página principal do chat
-        window.location.href = 'chat.html';
+        var audio = document.querySelector("audio");
+        audio.play();
+        document.body.classList.add("blur");
+        setTimeout(function () {
+
+      window.location.href = "chat.html";
+
+    }, 1300);
+
       });
     });
   </script>
