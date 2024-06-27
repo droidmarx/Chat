@@ -95,12 +95,26 @@
   }
 }
 
+@keyframes blink {
+            0% { color: black; }
+            50% { color: green;
+            scale:1.1;}
+            100% { color: black; }
+        }
+
+        h4.blinking-text {
+            animation: blink 1s infinite;
+        }
+
     
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Chat<span>-</span>Papo</h2>
+    <h2>Chat<span>-</span>Opap</h2>
+        
+        <h4 class="blinking-text">o Chat ao contrário</h4>
+
     <form id="introForm">
       <label for="name"></label>
       <input placeholder="Nome" type="text" id="name" required maxlength="32" />
