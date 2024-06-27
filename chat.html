@@ -296,13 +296,27 @@
       font-weight: bold;
       color: #4CAF50;
     }
+    
+      @keyframes blink {
+            0% { color: black; }
+            50% { color: green;
+            scale:1.1;}
+            100% { color: black; }
+        }
+
+        h4.blinking-text {
+            animation: blink 1s infinite;
+        }
+        
+        
   </style>
 </head>
 <body>
   
   <div class="container">
     <h2>Chat<span>-</span>Opap</h2>
-    <h4>o Chat ao contrário</h4>
+    
+    <h4 class="blinking-text">o Chat ao contrário</h4>
     
     <div>Bem-vindo, <span id="username"></span> de <span id="usercity"></span>!</div>
       <!-- Botão para mostrar usuários online -->
