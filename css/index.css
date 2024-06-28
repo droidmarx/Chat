@@ -54,15 +54,48 @@ label {
 }
 
 input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: .5px solid #4CAF50 ;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 14px;
-  position: relative;
-  animation: sliceleft .7s ease-in-out;
+    width: 130px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: .5px solid #4CAF50;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+    position: relative;
+    background: #FCFCFC;
+    transition: border-width 0.2s;
+    animation: sliceleft .7s ease;
+}
+
+input[type="text"]:focus {
+    border-width: .5px;
+    animation: blinke 1s infinite;
+    outline: none;
+    color: #4CAF50;
+    width: 280px;
+    position: absolute;
+    z-index: 2;
+    left: 40px;
+    transition: 1s ;
+    background: #FFFFFF87;
+    caret-color: transparent;
+}
+
+.transparent{
+  background-color: transparent;
+}
+
+@keyframes blinke {
+    0% {
+       color: #4CAF50; border-color: #4CAF50;
+    }
+    50% {
+       color: #4E754F; border-color: transparent;
+    }
+    100% {
+       color: #4CAF50; border-color: #4CAF50;
+
+    }
 }
 
 @keyframes sliceleft {
@@ -97,7 +130,7 @@ button {
   100% { bottom: 30px;}
 }
 
-button[type="submit"]:hover {
+button:hover {
   background-color: #45a049;
 }
 
@@ -143,6 +176,7 @@ img{
   position: relative;
   bottom: 30px;
   animation: sliceright .8s ease;
+  z-index: 1;
 }
 
 @keyframes sliceright {
