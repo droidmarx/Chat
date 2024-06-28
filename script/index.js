@@ -4,6 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
   const submitButton = document.getElementById('submitBtn');
   const nameInput = document.getElementById('name');
   
+ 
+ // Ocultar imput quando o outro recebe o focus
+ 
+ document.getElementById('name').addEventListener('focus', function() {
+  document.getElementById('city').style.display = 'none';
+});
+
+document.getElementById('city').addEventListener('focus', function() {
+  document.getElementById('name').style.display = 'none';
+});
+
+document.getElementById('name').addEventListener('blur', function() {
+  document.getElementById('city').style.display = 'inline-block';
+});
+
+document.getElementById('city').addEventListener('blur', function() {
+  document.getElementById('name').style.display = 'inline-block';
+});
+  
+  
+  
   // Verificar se o navegador suporta geolocalização
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
