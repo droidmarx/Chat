@@ -9,12 +9,22 @@ body {
   height: 100vh;
 }
 
+.box{
+  background-color: #fff;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+padding: 20px;
+height: 350px;
+text-align: center;
+}
+
 .container {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 300px;
+  width: 250px;
+  background: #CCCCCCBF;
   text-align: center;
   height: 120px;
 }
@@ -65,10 +75,10 @@ input[type="text"] {
   100% { left: 10px;}
 }
 
-button[type="submit"] {
+button {
   background-color: #4CAF50;
   color: white;
-  padding: 10px 100px;
+  padding: 10px 90px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -76,6 +86,7 @@ button[type="submit"] {
   position: relative;
   bottom: 30px;
   animation: slicedown .6s ease;
+  white-space: nowrap;
 }
 
 @keyframes slicedown {
