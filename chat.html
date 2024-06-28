@@ -1,64 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
   
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
-
-<link rel="shortcut icon" href="https://sacbr.com.br/wp-content/uploads/2023/08/cropped-SACBR_icon.png">
-
-<link rel="stylesheet" href="/css/chat.css">
-
+  <link rel="shortcut icon" href="https://sacbr.com.br/wp-content/uploads/2023/08/cropped-SACBR_icon.png">
   
+  <link rel="stylesheet" href="/css/chat.css">
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat-Opap</title>
 </head>
 <body>
-  
   <div class="container">
+    <button class="logoff-button" onclick="logoff()">X</button>
     <h2>Chat<span>-</span>Opap</h2>
-    
     <h4 class="blinking-text">o Chat ao contrário</h4>
-    
     <div>Bem-vindo, <span id="username"></span> de <span id="usercity"></span>!</div>
-      <!-- Botão para mostrar usuários online -->
-<button id="showOnlineUsersButton">Quem ta Online ?</button>
-
-    <div class="online-count">Usuários na sala: <span id="onlineCount">0</span>
-
+    
+    
+    <button id="showOnlineUsersButton">
+      <img height="32px" width="32px" src="/Online.svg" alt="Online">
+    </button>
+    
+    <div class="online-count">Usuários na sala: <span id="onlineCount">0</span></div>
+    
     <ul id="messages"></ul>
     
     <form id="form">
       <input id="input" autocomplete="off" placeholder="Digite sua mensagem..." />
       <button id="submitButton" type="submit">Entrar</button>
     </form>
-
     
     <div id="newUserAlert"></div>
     
     <audio id="newUserSound" style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
-    
-  <audio id="messageSound" style="display: none" src="/audio/email_entact.mp3" controls></audio>
-
-    
-    <button class="logoff-button" onclick="logoff()">Sair do Chat</button>
+    <audio id="messageSound" style="display: none" src="/audio/email_entact.mp3" controls></audio>
   </div>
-
-<!-- Sobreposição de usuários online -->
-<div id="onlineUsersOverlay">
-  <div id="overlayContent">
-    <button id="closeOverlayButton">X</button>
-    <h3>Usuários Online</h3>
-    <ul id="onlineUsersList"></ul>
+  
+  <!-- Sobreposição de usuários online -->
+  <div id="onlineUsersOverlay">
+    <div id="overlayContent">
+      <button id="closeOverlayButton">X</button>
+      <h3>Usuários Online</h3>
+      <ul id="onlineUsersList"></ul>
+    </div>
   </div>
-</div>
-
-
-<!-- Ably SDK -->
-<script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
-<script src="/script/chat.js" ></script>
+  
+  <!-- Ably SDK -->
+  <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
+  <script src="/script/chat.js"></script>
 </body>
 </html>
