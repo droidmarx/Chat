@@ -20,7 +20,7 @@ Para usar localmente, siga estes passos:
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/chat-opap.git
+   git clone https://github.com/droidmarx/Chat.git
    cd chat-opap
    ```
 
