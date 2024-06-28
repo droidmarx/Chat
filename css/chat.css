@@ -11,6 +11,7 @@
     }
 
     .container {
+      position: relative;
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -18,6 +19,7 @@
       width: 400px;
       text-align: center;
       overflow: hidden;
+      height: 100vh;
     }
 
     h2 {
@@ -239,6 +241,7 @@
       border-radius: 8px;
       position: relative;
       text-align: center;
+      width: 100vw;
     }
 
     #closeOverlayButton {
@@ -290,7 +293,41 @@
         }
 
         h4.blinking-text {
-            animation: blink 1s infinite;
+            animation: blink 5s infinite;
         }
         
-        
+      
+      .logoff-button {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        height: 60px ;
+        border-radius: 0px 0px 0px 8px;
+      }
+      
+      #showOnlineUsersButton{
+          display:block;
+          position: absolute;
+          top:0px;
+          left: 0px;
+          width: 24px;
+          transition: 1.5s ;
+          border-radius: 0px 0px 8px 0px;
+      }
+      
+      #showOnlineUsersButton:focus{
+          width: 100vw;
+          height: 100vh;
+      }
+      
+      #showOnlineUsersButton>Img{
+          position: relative;
+          left:4px;
+          margin: 0;
+      }
+      
+      
+      img:hover {
+          scale: 10;
+          z-index: 1;
+      }
