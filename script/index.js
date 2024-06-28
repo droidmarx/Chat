@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('introForm');
   const submitButton = document.getElementById('submitBtn');
   const nameInput = document.getElementById('name');
-
+  
   // Verificar se o navegador suporta geolocalização
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Utilizar serviço de geocodificação reversa para obter a cidade
       const geocodeUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt`;
-
+      
       fetch(geocodeUrl)
         .then(response => response.json())
         .then(data => {
@@ -48,29 +48,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Ao enviar o formulário
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const city = document.getElementById('city').value;
+  // Ao clicar no botão fora do formulário
+  submitButton.addEventListener('click', function(e) {
+    e.preventDefault(); // Evita que o botão faça o comportamento padrão de enviar o formulário
+
+    const name = nameInput.value;
+    const city = cityInput.value;
+    
     // Armazenar os dados temporariamente no localStorage
     localStorage.setItem('username', name);
     localStorage.setItem('usercity', city);
+    
     // Redirecionar para a página principal do chat
     var audio = document.querySelector("audio");
     audio.play();
     document.body.classList.add("blur");
-    setTimeout(function() {
+    
+    setTimeout(function () {
       window.location.href = "chat.html";
     }, 1300);
-  });
-
-  // Habilitar o botão de envio se os campos de entrada não estiverem vazios
-  form.addEventListener('input', function() {
-    if (nameInput.value.trim() !== '' && cityInput.value.trim() !== '') {
-      submitButton.removeAttribute('disabled');
-    } else {
-      submitButton.setAttribute('disabled', true);
-    }
   });
 });
