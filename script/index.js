@@ -1,71 +1,76 @@
+document.addEventListener('DOMContentLoaded', function() {
+  const cityInput = document.getElementById('city');
+  const form = document.getElementById('introForm');
+  const submitButton = document.getElementById('submitBtn');
+  const nameInput = document.getElementById('name');
 
-     document.addEventListener('DOMContentLoaded', function() {
-      const cityInput = document.getElementById('city');
-      const form = document.getElementById('introForm');
-      const submitButton = form.querySelector('button[type="submit"]');
-      const nameInput = document.getElementById('name');
-      
-      // Verificar se o navegador suporta geolocalização
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
+  // Verificar se o navegador suporta geolocalização
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
-          // Utilizar serviço de geocodificação reversa para obter a cidade
-          const geocodeUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt`;
-          
-          fetch(geocodeUrl)
-            .then(response => response.json())
-            .then(data => {
-              const city = data.locality;
-              cityInput.value = city;
-              cityInput.removeAttribute('disabled');
-              submitButton.removeAttribute('disabled');
-              form.querySelector('label[for="city"]').textContent = '';
-            })
-            .catch(error => {
-              console.error('Erro ao obter a cidade:', error);
-              cityInput.placeholder = 'Erro ao carregar cidade. Preencha manualmente.';
-              cityInput.removeAttribute('disabled');
-              submitButton.removeAttribute('disabled');
-            });
-        }, error => {
-          console.error('Erro ao obter a localização:', error);
+      // Utilizar serviço de geocodificação reversa para obter a cidade
+      const geocodeUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt`;
+
+      fetch(geocodeUrl)
+        .then(response => response.json())
+        .then(data => {
+          const city = data.locality;
+          cityInput.value = city;
+          cityInput.removeAttribute('disabled');
+          submitButton.removeAttribute('disabled');
+          form.querySelector('label[for="city"]').textContent = '';
+        })
+        .catch(error => {
+          console.error('Erro ao obter a cidade:', error);
           cityInput.placeholder = 'Erro ao carregar cidade. Preencha manualmente.';
           cityInput.removeAttribute('disabled');
           submitButton.removeAttribute('disabled');
         });
-      } else {
-        console.error('Geolocalização não é suportada pelo navegador.');
-        cityInput.placeholder = 'Geolocalização não suportada. Preencha manualmente.';
-        cityInput.removeAttribute('disabled');
-        submitButton.removeAttribute('disabled');
-      }
-
-      // Validação de comprimento do nome de usuário
-      nameInput.addEventListener('input', function() {
-        if (nameInput.value.length > 20) {
-          nameInput.value = nameInput.value.substring(0, 20);
-        }
-      });
-
-      // Ao enviar o formulário
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = document.getElementById('name').value;
-        const city = document.getElementById('city').value;
-        // Armazenar os dados temporariamente no localStorage
-        localStorage.setItem('username', name);
-        localStorage.setItem('usercity', city);
-        // Redirecionar para a página principal do chat
-        var audio = document.querySelector("audio");
-        audio.play();
-        document.body.classList.add("blur");
-        setTimeout(function () {
-
-      window.location.href = "chat.html";
-
-    }, 1300);
-
-      });
+    }, error => {
+      console.error('Erro ao obter a localização:', error);
+      cityInput.placeholder = 'Erro ao carregar cidade. Preencha manualmente.';
+      cityInput.removeAttribute('disabled');
+      submitButton.removeAttribute('disabled');
     });
+  } else {
+    console.error('Geolocalização não é suportada pelo navegador.');
+    cityInput.placeholder = 'Geolocalização não suportada. Preencha manualmente.';
+    cityInput.removeAttribute('disabled');
+    submitButton.removeAttribute('disabled');
+  }
+
+  // Validação de comprimento do nome de usuário
+  nameInput.addEventListener('input', function() {
+    if (nameInput.value.length > 20) {
+      nameInput.value = nameInput.value.substring(0, 20);
+    }
+  });
+
+  // Ao enviar o formulário
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const city = document.getElementById('city').value;
+    // Armazenar os dados temporariamente no localStorage
+    localStorage.setItem('username', name);
+    localStorage.setItem('usercity', city);
+    // Redirecionar para a página principal do chat
+    var audio = document.querySelector("audio");
+    audio.play();
+    document.body.classList.add("blur");
+    setTimeout(function() {
+      window.location.href = "chat.html";
+    }, 1300);
+  });
+
+  // Habilitar o botão de envio se os campos de entrada não estiverem vazios
+  form.addEventListener('input', function() {
+    if (nameInput.value.trim() !== '' && cityInput.value.trim() !== '') {
+      submitButton.removeAttribute('disabled');
+    } else {
+      submitButton.setAttribute('disabled', true);
+    }
+  });
+});
