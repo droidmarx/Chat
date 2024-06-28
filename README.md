@@ -1,6 +1,3 @@
-Para melhorar o seu `README.md`, aqui está uma versão mais detalhada e estruturada:
-
----
 
 # Chat Opap
 
