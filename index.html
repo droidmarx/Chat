@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
-  
-<link rel="shortcut icon" href="https://sacbr.com.br/wp-content/uploads/2023/08/cropped-SACBR_icon.png">  
-
-<link rel="stylesheet" href="/css/index.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&family=Tiny5&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="https://sacbr.com.br/wp-content/uploads/2023/08/cropped-SACBR_icon.png">  
+  <link rel="stylesheet" href="/css/index.css">
   
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,21 +14,21 @@
 <body>
   <div class="container">
     <h2>Chat<span>-</span>Opap</h2>
-        
-        <h4 class="blinking-text">o Chat ao contrário</h4>
-
-    <form id="introForm">
-      <label for="name"></label>
-      <input placeholder="Nome" type="text" id="name" required maxlength="32" />
-      <label for="city">Carregando Geolocalização...</label>
-      <input placeholder="Cidade" type="text" id="city" disabled /><br><br>
-      <button type="submit" disabled>Iniciar Chat</button>
-    </form>
+    <h4 class="blinking-text">o Chat ao contrário</h4>
+    <div class="form-image-container">
+      <form  id="introForm">
+        <label for="name"></label>
+        <input placeholder="Nome" type="text" id="name" required maxlength="32" />
+        <label for="city">Carregando Geolocalização...</label>
+        <input placeholder="Cidade" type="text" id="city" disabled /><br><br>
+      </form>
+      <div>
+        <img width="120px" height="150px" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_632/49bcfd78364175.5ca3009cb692f.gif" alt="Imagem">
+      </div>
+    </div>
+    <button type="submit" id="submitBtn" disabled>Iniciar Chat</button>
   </div>
-  
-    <audio id="wou" style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
-
-
+  <audio id="wou" style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
   <script src="/script/index.js"></script>
 </body>
 </html>
