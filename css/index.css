@@ -176,6 +176,7 @@ h4.blinking-text {
 img{
   position: relative;
   bottom: 30px;
+  margin-left: -50px;
   animation: sliceright .8s ease;
   z-index: 1;
 }
