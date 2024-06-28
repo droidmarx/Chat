@@ -155,10 +155,11 @@ span {
 
 @keyframes slidein {
   1% {
-    scale: 1;
+    scale: -1;
   }
   100% {
-    scale: 50;
+    scale: 20;
+    rotate: 360deg;
   }
 }
 
