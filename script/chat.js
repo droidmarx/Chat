@@ -142,6 +142,8 @@
 
     // Muda o texto do botão para "Enviar"
     const submitButton = document.getElementById('submitButton');
+    // Adiciona a classe 'showbutton'
+    input.classList.add('showbutton');
     submitButton.textContent = 'Enviar';
 
     // Muda o evento de submit do formulário para apenas enviar mensagem
