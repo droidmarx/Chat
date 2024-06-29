@@ -10,12 +10,14 @@ body {
 }
 
 .box{
-  background-color: #fff;
+background-color: #fff;
 border-radius: 8px;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 padding: 20px;
-height: 350px;
+height: 300px;
 text-align: center;
+position: absolute;
+z-index: 0;
 }
 
 .container {
@@ -54,6 +56,7 @@ label {
 }
 
 input[type="text"] {
+    left: -225px;
     width: 170px;
     padding: 10px;
     margin-bottom: 15px;
@@ -62,9 +65,11 @@ input[type="text"] {
     box-sizing: border-box;
     font-size: 14px;
     position: relative;
-    background: #FCFCFC;
+    background: #FCFCFC99;
     transition: border-width 0.2s;
     animation: sliceleft .7s ease;
+    position: relative ;
+    z-index: 2;
 }
 
 input[type="text"]:focus {
@@ -73,9 +78,7 @@ input[type="text"]:focus {
     outline: none;
     color: #4CAF50;
     width: 280px;
-    position: absolute;
-    z-index: 2;
-    left: 40px;
+    position: relative;
     transition: 1s ;
     background: #FFFFFF87;
     caret-color: transparent;
@@ -99,13 +102,8 @@ input[type="text"]:focus {
 }
 
 @keyframes sliceleft {
-  0%{ left: -100px;}
-  50%{ left: 40px;}
-  60%{ left: 15px;}
-  70%{ left: 30px;}
-  80%{ left: 10px;}
-  90%{ left: 5px;}
-  100% { left: 10px;}
+  0%{ left: 320px;}
+  100% { left: -225px;}
 }
 
 button {
@@ -173,10 +171,15 @@ h4.blinking-text {
   animation: blink 5s infinite;
 }
 
+.moveimg{
+ left:-100px;
+ display:none;
+}
+
 img{
   position: relative;
   bottom: 30px;
-  margin-left: -50px;
+  margin-left: 50px;
   animation: sliceright .8s ease;
   z-index: 1;
 }
