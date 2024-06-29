@@ -310,7 +310,7 @@
           position: absolute;
           top:0px;
           left: 0px;
-          width: 24px;
+          width: 64px;
           transition: 1.5s ;
           border-radius: 0px 0px 8px 0px;
       }
@@ -330,4 +330,18 @@
       img:hover {
           scale: 10;
           z-index: 1;
+      }
+      
+      .showbutton{
+       transition: 2s;
+       width: 300px;
+       display: flex;
+      }
+      
+      input{
+       display: none;
+      }
+      
+      #submitButton{
+       width: 90vw;
       }
